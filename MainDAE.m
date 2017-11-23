@@ -1,3 +1,5 @@
+%van zutphen snapt het hoor
+
 clear all
 close all
 clc
