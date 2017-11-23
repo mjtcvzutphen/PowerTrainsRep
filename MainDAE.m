@@ -124,3 +124,5 @@ SaveName = fullfile(DataDir,CaseName);
 V = CylVolumeFie(time);
 save(SaveName,'Settings','Cyl','Int','Exh','Comb','time','y','yNames','V','SpS');
 fprintf('Saved solution of Case %3i to %s\n',iCase,SaveName);
+
+plot(t,y(:,1));
