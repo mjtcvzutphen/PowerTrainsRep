@@ -1,9 +1,8 @@
 function [yp] = FtyDAE( t,y )
 global Int Exh QLHV SpS Runiv omega
-global GaussatCA50  mfuIVCClose si EtaComb
+global GaussatCA50  mfuIVCClose si EtaComb Bore N Stroke p_plenum VDisp Vc
 
-Twall   = 273+80;
-alfa    = 500;
+
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
 Mi = [SpS.Mass];Nsp = length(Mi);
@@ -93,6 +92,27 @@ dmidt_c     = si'*dmfuComb;
 dmidt       = dmidt - dmidt_c;
 dQcomb      = QLHV*dmfuComb;
 dQcomb_real = ei*dmidt_c;
+
+if (omega >0 && omega < pi) || (omega > 3*pi)
+    C1 = 6.18;
+    C2 = 0;
+elseif omega > pi && omega < 2*pi
+    C1 = 2.28;
+    C2 = 0;
+elseif omega >2*pi && omega < 3*pi
+    C1 = 2.28;
+    C2 = 3.24e-3;
+end
+
+Twall   = 273+80;
+Sp = N/60*2*Stroke;
+Tr = 293;
+pr = p_plenum;
+Vr = Vc + VDisp;
+pmotor = p_plenum*(Vc+VDisp)^gamma/(V^gamma);
+w = C1*Sp + C2*(VDisp*Tr)/(pr*Vr)*(p-pmotor);
+alfa    = 3.26*Bore^(-0.2)*(p/1000)^(0.8)*T^(-0.55)*w^(0.8);
+
 dQhl        = alfa*A*(Twall-T);
 %% DAE formulation
 Rg = StateCyl.Rg;
