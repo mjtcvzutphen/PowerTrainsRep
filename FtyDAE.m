@@ -104,8 +104,6 @@ elseif omega >2*pi && omega < 3*pi
     C2 = 3.24e-3;
 end
 
-
-
 Twall   = 273+80;
 Sp = N/60*2*Stroke;
 Tr = 293;
