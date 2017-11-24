@@ -1,5 +1,3 @@
-%van zutphen snapt het hoor
-
 clear all
 close all
 clc
@@ -16,7 +14,7 @@ bara=1e5;
 mm=1e-3;cm=1e-2;dm=0.1;
 liter = dm^3;
 %% Set a few global variables
-global rc LCon Stroke Bore N omega Di De  % Engine globals
+global rc LCon Stroke Bore N omega Di De p_plenum Vc % Engine globals
 LCon    = 261.6*mm;                 % connecting rod length
 Stroke  = 158*mm;                   % stroke
 Bore    = 130*mm;                   % bore
@@ -66,7 +64,7 @@ si      = nui.*Mi/Mi(1);                                        % Reaction stoic
 AFstoi_molar  = nui(2)+nui(2)*Xair(3)/Xair(2);                  % So-called stoichiometric air fuel ratio (fuel property for given air composition), sometimes students use this as AFstoi.
 AFstoi  = si(2)+si(2)*Yair(3)/Yair(2);                          % So-called stoichiometric air fuel ratio (fuel property for given air composition)
 %% Set simulation time
-Ncyc    = 4;
+Ncyc    = 1;
 REVS    = N/60;
 omega   = REVS*2*pi;
 tcyc    = (2/REVS);
@@ -126,5 +124,3 @@ SaveName = fullfile(DataDir,CaseName);
 V = CylVolumeFie(time);
 save(SaveName,'Settings','Cyl','Int','Exh','Comb','time','y','yNames','V','SpS');
 fprintf('Saved solution of Case %3i to %s\n',iCase,SaveName);
-
-plot(t,y(:,1));
