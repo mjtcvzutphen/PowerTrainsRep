@@ -104,7 +104,6 @@ elseif omega >2*pi && omega < 3*pi
     C2 = 3.24e-3;
 end
 
-%% PIEMELS
 
 
 Twall   = 273+80;
