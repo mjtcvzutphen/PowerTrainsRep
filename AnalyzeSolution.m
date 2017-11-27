@@ -72,7 +72,7 @@ pp_gross = pp - 3.8515*10^5;
 [ja, index] = min(abs(pp_gross));
 [pp_intersect,index_p] = min(abs(pp_gross));
 for i=(index_p-1):size(pp_gross)
-pp_gross(i) = 9999999
+pp_gross(i) = 9999999;
 end 
 [pp_intersect,index_pp] = min(abs(pp_gross)); 
 
