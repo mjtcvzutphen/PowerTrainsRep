@@ -65,4 +65,29 @@ tx=text(t(index)*[1 1]/ms,1.1*mfuel*[1 1]/g,'Selected fuel mass','Rotation',45);
 QLHV = Comb.QLHV;
 Qin = mfuel*QLHV;
 eff = W/Qin;
-% etcetera
+
+%% Calcuation of MEPs
+%(2.0502,3.8515)
+pp_gross = pp - 3.8515*10^5;
+[ja, index] = min(abs(pp_gross));
+[pp_intersect,index_p] = min(abs(pp_gross));
+for i=(index_p-1):size(pp_gross)
+pp_gross(i) = 9999999
+end 
+[pp_intersect,index_pp] = min(abs(pp_gross)); 
+
+pp_partial = pp(index_pp:index_p);
+Vp_partial = Vp(index_pp:index_p);
+W_net = trapz(Vp_partial,pp_partial);
+Vd = max(V) - min(V);
+
+T = (W_net)/(2*pi);
+
+% indicated mean effective pressure gross
+IMEPg = W / Vd;
+% indicated mean effective pressure net
+IMEPn = W_net / Vd;
+% Pump mean effective pressure
+PMEP = (W-W_net) / Vd; 
+% Brake mean effective pressure
+BMEP = T / Vd; 
