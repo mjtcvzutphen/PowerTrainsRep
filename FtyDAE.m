@@ -1,5 +1,5 @@
 function [yp] = FtyDAE( t,y )
-global Int Exh QLHV SpS Runiv omega
+global Int Exh QLHV SpS Runiv omega Ca
 global GaussatCA50  mfuIVCClose si EtaComb Bore N Stroke p_plenum VDisp Vc
 
 
@@ -93,16 +93,7 @@ dmidt       = dmidt - dmidt_c;
 dQcomb      = QLHV*dmfuComb;
 dQcomb_real = ei*dmidt_c;
 
-if (omega >0 && omega < pi) || (omega > 3*pi)
-    C1 = 6.18;
-    C2 = 0;
-elseif omega > pi && omega < 2*pi
-    C1 = 2.28;
-    C2 = 0;
-elseif omega >2*pi && omega < 3*pi
-    C1 = 2.28;
-    C2 = 3.24e-3;
-end
+[C1, C2] = woschniconstants(reducedCa);
 
 Twall   = 273+80;
 Sp = N/60*2*Stroke;
