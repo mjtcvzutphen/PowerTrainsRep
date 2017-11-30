@@ -1,5 +1,5 @@
 function [yp] = FtyDAE( t,y )
-global Int Exh QLHV SpS Runiv omega Ca
+global Int Exh QLHV SpS Runiv omega reducedCa dummy heatloss
 global GaussatCA50  mfuIVCClose si EtaComb Bore N Stroke p_plenum VDisp Vc
 
 
@@ -103,8 +103,9 @@ Vr = Vc + VDisp;
 pmotor = p_plenum*(Vc+VDisp)^gamma/(V^gamma);
 w = C1*Sp + C2*(VDisp*Tr)/(pr*Vr)*(p-pmotor);
 alfa    = 3.26*Bore^(-0.2)*(p/1000)^(0.8)*T^(-0.55)*w^(0.8);
-
 dQhl        = alfa*A*(Twall-T);
+heatloss(dummy) = dQhl;
+dummy = dummy + 1;
 %% DAE formulation
 Rg = StateCyl.Rg;
 yp = [dQhl-p*dVdt+hpaI*dmdtI+hpaE*dmdtE;p*V-Rg*T*m;dmidt];

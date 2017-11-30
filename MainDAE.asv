@@ -118,12 +118,11 @@ odopt=odeset('RelTol',1e-4,'Mass',@MassDAE,'MassSingular','yes');           % Se
 tic;
 [time,y]=ode15s(@FtyDAE,tspan,y0,odopt);                                    % Take a specific solver
 tel=toc;
-dt = t(2) - t(1);
-heatlost = sum(heatloss*dt);
+
 fprintf('Spent time %9.2f (solver %s)\n',tel,'ode15s');
 %% Specify SaveName
 CaseName = ['Case' num2str(iCase,'%3.3i') '.mat'];
 SaveName = fullfile(DataDir,CaseName);
 V = CylVolumeFie(time);
-save(SaveName,'Settings','Cyl','Int','Exh','Comb','time','y','yNames','V','SpS', 'heatlost');
+save(SaveName,'Settings','Cyl','Int','Exh','Comb','time','y','yNames','V','SpS');
 fprintf('Saved solution of Case %3i to %s\n',iCase,SaveName);
