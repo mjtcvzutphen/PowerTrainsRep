@@ -14,7 +14,7 @@ bara=1e5;
 mm=1e-3;cm=1e-2;dm=0.1;
 liter = dm^3;
 %% Set a few global variables
-global rc LCon Stroke Bore N omega Di De p_plenum dummy heatloss heatlost % Engine globals
+global rc LCon Stroke Bore N omega Di De p_plenum dummy heatloss heatlost dt % Engine globals
 LCon    = 261.6*mm;                 % connecting rod length
 Stroke  = 158*mm;                   % stroke
 Bore    = 130*mm;                   % bore
@@ -65,11 +65,12 @@ si      = nui.*Mi/Mi(1);                                        % Reaction stoic
 AFstoi_molar  = nui(2)+nui(2)*Xair(3)/Xair(2);                  % So-called stoichiometric air fuel ratio (fuel property for given air composition), sometimes students use this as AFstoi.
 AFstoi  = si(2)+si(2)*Yair(3)/Yair(2);                          % So-called stoichiometric air fuel ratio (fuel property for given air composition)
 %% Set simulation time
-Ncyc    = 1;
+Ncyc    = 4;
 REVS    = N/60;
 omega   = REVS*2*pi;
 tcyc    = (2/REVS);
 t       = [0:0.1:360]./360*tcyc*Ncyc;
+dt = t(2) - t(1);
 %% Compute initial conditions and intake/exhaust composition
 V0      = CylVolumeFie(t(1));
 T0      = 273;
@@ -118,7 +119,6 @@ odopt=odeset('RelTol',1e-4,'Mass',@MassDAE,'MassSingular','yes');           % Se
 tic;
 [time,y]=ode15s(@FtyDAE,tspan,y0,odopt);                                    % Take a specific solver
 tel=toc;
-dt = t(2) - t(1);
 heatlost = sum(heatloss*dt);
 fprintf('Spent time %9.2f (solver %s)\n',tel,'ode15s');
 %% Specify SaveName
