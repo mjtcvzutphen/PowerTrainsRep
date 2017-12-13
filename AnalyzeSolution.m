@@ -25,11 +25,13 @@ t=time;p = y(:,1);T=y(:,2);mi=y(:,iSpSel);
 RPM = Settings.N;
 REVS = RPM/60;trev = 1/REVS;nREVS = (t(end)-t(1))/trev;
 % Select a cycle
-it = find(t > (nREVS-2)*trev & t <= nREVS*trev);
-tp = t(it);
+it = find(t > (nREVS-2)*trev & t <= nREVS*trev);            %taking the last two revolutions (last cycle)
+tp = t(it);                                                 %using only these values for time, pressure, Temperature etc. 
 pp = p(it);
 Tp = T(it);
 mip = mi(it,:);
+Vp = V(it);
+% Plot a cycle's t/p, t/T and t/m diagrams
 figure(1)
 subplot(2,2,1)
 plot(tp/ms,pp/bara);
@@ -43,7 +45,6 @@ xlabel('t [ms]');ylabel('m [g]');
 legend(yNames{iSpSel});
 %% pV diagram
 figure(2)
-Vp = V(it);
 subplot(1,2,1)
 pl=plot(V/liter,p/bara,'--',Vp/liter,pp/bara,'r-');
 set(pl(end),'LineWidth',2);
