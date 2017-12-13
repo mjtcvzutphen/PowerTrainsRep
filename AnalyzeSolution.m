@@ -90,26 +90,24 @@ end
 
 % determining first intersection index number
 [pp_intersect1,index_pp1] = min(abs(pp_gross_cut));   % finding the index of p in that intersection point in the cut vector
-% index_pp1 = index_pp_gross_cut1+index_lgt_V(1)-1;               % translating the found cut-vector (pp_gross) index number to the full-vector (pp) index number
 
-    %     Old version of the for-loop
-    %     for i=(index_p-1):size(pp_gross);      
-    %     pp_gross(i) = 9999999;
-    %     end 
 % new for-loop by Menno Z
 for i=(index_pp1-100):(index_pp1+100);
 pp_gross_cut(i) = 9999999;
 end 
 
+% determining second intersection index number
 [pp_intersect2,index_pp2] = min(abs(pp_gross_cut-pp_intersect1)); 
-% index_pp2 = index_pp_gross_cut2+index_lgt_V(1)-1;        % translating the found cut-vector (pp_gross) index number to the full-vector (pp) index number
+
 pp_partial = pp(index_pp1:index_pp2);
 Vp_partial = Vp(index_pp1:index_pp2);
-% W_net = trapz(Vp_partial,pp_partial);
-Vd = max(V) - min(V);
-figure(10)
-plot(Vp_partial,pp_partial)
-T = (W_net)/(2*pi);
+W_net = trapz(Vp_partial,pp_partial);
+Vd = max(V) - min(V);           % determining the volume inside the
+figure(2)
+subplot(1,2,1)
+hold on
+plot(Vp_partial/liter,pp_partial/bara,'b-')
+T = (W_net)/(2*pi);             % determining torque
 
 % indicated mean effective pressure gross
 IMEPg = W / Vd;
