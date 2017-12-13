@@ -72,7 +72,7 @@ eff = W/Qin;
 
 % Determining index numbers in which the intersection point certainly is located
 index_legit_V = find(V > 1.95*10^-3);   % getting the indexes that surely have the intersection point
-pp_gross = pp - 3.8597*10^5;            % moving the point of intersect to p=0 in order to later use the min() function to find the index of the intersect
+pp_gross = pp - 3.8597*10^5;            % moving the point of intersect to p=0
 
 % cutting off the parts that surely don't contain the intersection point
 pp_gross_cut=[];                        % initializing the vector
