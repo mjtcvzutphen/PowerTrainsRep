@@ -67,7 +67,7 @@ QLHV = Comb.QLHV;
 Qin = mfuel*QLHV;
 eff = W/Qin;
 
-%% Calcuation of Work/MEPs
+%% Calcuation of MEPs
 % self-determined cutting coordinates: [2.0465,3.8597]
 
 % Determining index numbers in which the intersection point certainly is located
@@ -101,7 +101,7 @@ end
 
 pp_partial = pp(index_pp1:index_pp2);
 Vp_partial = Vp(index_pp1:index_pp2);
-
+W_net = trapz(Vp_partial,pp_partial);
 pp_partial_first = pp(1:index_pp1);
 pp_partial_secnd = pp(index_pp2:length(pp));
 Vp_partial_first = Vp(1:index_pp1);
@@ -119,9 +119,7 @@ for i=1:(length(pp_partial_first)+length(pp_partial_secnd)-1);
     end
 end
 
-W_net = trapz(Vp_partial,pp_partial);
-W_lost = abs( trapz(Vp_partial_outter,pp_partial_outter) );
-W_total = W_net+W_lost;
+
 Vd = max(V) - min(V);           % determining the volume inside the
 
 % checking congruency with full plot
@@ -133,12 +131,10 @@ plot(Vp_partial_outter/liter,pp_partial_outter/bara,'b-')
 T = (W_net)/(2*pi);             % determining torque
 
 % indicated mean effective pressure gross
-IMEPg = W_total / Vd;
+IMEPg = W / Vd;
 % indicated mean effective pressure net
 IMEPn = W_net / Vd;
 % Pump mean effective pressure
-PMEP = (W_lost) / Vd; 
+PMEP = (W-W_net) / Vd; 
 % Brake mean effective pressure
 BMEP = T / Vd; 
-
-
