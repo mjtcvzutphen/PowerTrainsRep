@@ -53,21 +53,7 @@ subplot(1,2,2)
 pl=loglog(V/liter,p/bara,'--',Vp/liter,pp/bara,'r-');
 set(pl(end),'LineWidth',2);
 xlabel('log V [l]');ylabel('log p [bara]');
-%% Computations
-W   = trapz(Vp,pp);                  % total work, integral pdV
-dummy = find(t > (nREVS-1.25)*trev); % I guess this is after IVC and before combustion. There are better ways.
-index = dummy(1);
-mfuel = mi(index,1); % fuel mass after intake valve close (just before combustion starts for instance)
-% Plot it for checks
-figure(1)
-subplot(2,2,[3 4])
-line(t(index)*[1 1]/ms,mfuel*[1 1]/g,'Marker','o','MarkerSize',8,'MarkerFaceColor','y');
-tx=text(t(index)*[1 1]/ms,1.1*mfuel*[1 1]/g,'Selected fuel mass','Rotation',45);
-QLHV = Comb.QLHV;
-Qin = mfuel*QLHV;
-eff = W/Qin;
-
-%% Calcuation of Work/MEPs
+%% Calcuation of Work
 % self-determined cutting coordinates: [2.0465,3.8597]
 
 % Determining index numbers in which the intersection point certainly is located
@@ -121,7 +107,7 @@ end
 
 W_net = trapz(Vp_partial,pp_partial);
 W_lost = abs( trapz(Vp_partial_outter,pp_partial_outter) );
-W_total = W_net+W_lost;
+W = W_net+W_lost;
 Vd = max(V) - min(V);           % determining the volume inside the
 
 % checking congruency with full plot
@@ -130,15 +116,39 @@ subplot(1,2,1)
 hold on
 plot(Vp_partial/liter,pp_partial/bara,'b-')
 plot(Vp_partial_outter/liter,pp_partial_outter/bara,'b-')
-T = (W_net)/(2*pi);             % determining torque
 
+%% Computation trapped mass and trapped fuel
+dummy = find(t > (nREVS-1.25)*trev); % I guess this is after IVC and before combustion. There are better ways.
+index = dummy(1);
+mfuel = mi(index,1); % fuel mass after intake valve close (just before combustion starts for instance)
+m_trapped = mi(index,:); % fuel mass after intake valve close (just before combustion starts for instance)
+% Plot it for checks
+figure(1)
+subplot(2,2,[3 4])
+line(t(index)*[1 1]/ms,mfuel*[1 1]/g,'Marker','o','MarkerSize',8,'MarkerFaceColor','y');
+tx=text(t(index)*[1 1]/ms,1.1*mfuel*[1 1]/g,'Selected fuel mass','Rotation',45);
+
+%% Computation efficiency
+QLHV = Comb.QLHV;
+Qin = mfuel*QLHV;
+eff = W/Qin;
+
+%% Calculation of Torque
+T = (W_net)/(2*pi);             % determining torque
+Torque  = eff * mfuel * QLHV / REVS / 2 / pi(); % is this one right?
+
+%% Calcuation of MEPS
 % indicated mean effective pressure gross
-IMEPg = W_total / Vd;
+IMEPg = W / Vd;
 % indicated mean effective pressure net
 IMEPn = W_net / Vd;
 % Pump mean effective pressure
 PMEP = (W_lost) / Vd; 
 % Brake mean effective pressure
 BMEP = T / Vd; 
+
+
+
+
 
 

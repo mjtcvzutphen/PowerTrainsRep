@@ -53,21 +53,7 @@ subplot(1,2,2)
 pl=loglog(V/liter,p/bara,'--',Vp/liter,pp/bara,'r-');
 set(pl(end),'LineWidth',2);
 xlabel('log V [l]');ylabel('log p [bara]');
-%% Computations
-W   = trapz(Vp,pp);                  % total work, integral pdV
-dummy = find(t > (nREVS-1.25)*trev); % I guess this is after IVC and before combustion. There are better ways.
-index = dummy(1);
-mfuel = mi(index,1); % fuel mass after intake valve close (just before combustion starts for instance)
-% Plot it for checks
-figure(1)
-subplot(2,2,[3 4])
-line(t(index)*[1 1]/ms,mfuel*[1 1]/g,'Marker','o','MarkerSize',8,'MarkerFaceColor','y');
-tx=text(t(index)*[1 1]/ms,1.1*mfuel*[1 1]/g,'Selected fuel mass','Rotation',45);
-QLHV = Comb.QLHV;
-Qin = mfuel*QLHV;
-eff = W/Qin;
-
-%% Calcuation of MEPs
+%% Calcuation of Work/MEPs
 % self-determined cutting coordinates: [2.0465,3.8597]
 
 % Determining index numbers in which the intersection point certainly is located
@@ -101,7 +87,7 @@ end
 
 pp_partial = pp(index_pp1:index_pp2);
 Vp_partial = Vp(index_pp1:index_pp2);
-W_net = trapz(Vp_partial,pp_partial);
+
 pp_partial_first = pp(1:index_pp1);
 pp_partial_secnd = pp(index_pp2:length(pp));
 Vp_partial_first = Vp(1:index_pp1);
@@ -119,7 +105,9 @@ for i=1:(length(pp_partial_first)+length(pp_partial_secnd)-1);
     end
 end
 
-
+W_net = trapz(Vp_partial,pp_partial);
+W_lost = abs( trapz(Vp_partial_outter,pp_partial_outter) );
+W = W_net+W_lost;
 Vd = max(V) - min(V);           % determining the volume inside the
 
 % checking congruency with full plot
@@ -135,6 +123,23 @@ IMEPg = W / Vd;
 % indicated mean effective pressure net
 IMEPn = W_net / Vd;
 % Pump mean effective pressure
-PMEP = (W-W_net) / Vd; 
+PMEP = (W_lost) / Vd; 
 % Brake mean effective pressure
 BMEP = T / Vd; 
+
+
+
+%% Computation trapped fuel mass
+dummy = find(t > (nREVS-1.25)*trev); % I guess this is after IVC and before combustion. There are better ways.
+index = dummy(1);
+mfuel = mi(index,1); % fuel mass after intake valve close (just before combustion starts for instance)
+% Plot it for checks
+figure(1)
+subplot(2,2,[3 4])
+line(t(index)*[1 1]/ms,mfuel*[1 1]/g,'Marker','o','MarkerSize',8,'MarkerFaceColor','y');
+tx=text(t(index)*[1 1]/ms,1.1*mfuel*[1 1]/g,'Selected fuel mass','Rotation',45);
+QLHV = Comb.QLHV;
+Qin = mfuel*QLHV;
+eff = W/Qin;
+
+
